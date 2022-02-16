@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 import './App.css';
 import contract from './contracts/MyNFT.json';
 
@@ -16,6 +17,16 @@ function App() {
       return;
     } else {
       console.log("Wallet exists! We're ready to go")
+    }
+
+    const accounts = await ethereum.request({ method: 'eth_accounts'});
+
+    if (accounts.lenght !== 0) {
+      const account = accounts[0];
+      console.log("Found an authorized account: ", account);
+      setCurrentAccount(account);
+    } else {
+      console.log("No authorized account found");
     }
   }
   
@@ -35,7 +46,28 @@ function App() {
     }
   }
 
-  const mintNftHandler = () => { }
+  const mintNftHandler = async () => { 
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const nftContract = new ethers.Contract(contractAddress, abi, signer);
+
+        console.log("Initialize payment");
+        let nftTxn = await nftContract.safeMint;
+        console.log("Minting... please wait");
+        await nftTxn.await; //needs to be checked
+        console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`); //needs to be checked
+      } else {
+        console.log("Ethereum object does not exist");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const connectWalletButton = () => {
     return (
       <button onClick={connectWalletHandler} className='cta-button connect-wallet-button'>
@@ -47,7 +79,7 @@ function App() {
 const mintNftButton = () => {
   return (
     <button onClick={mintNftHandler} className='cta-button mint-nft-button'>
-      Mint NFT
+      Mint Book
     </button>
   )
 }
@@ -58,9 +90,9 @@ useEffect(() => {
 
   return (
     <div className='main-app'>
-      <h1>Scrappy Squirrels Tutorial</h1>
+      <h1>Bookverse Alpha</h1>
       <div>
-        {connectWalletButton()}
+        {currentAccount ? mintNftButton() : connectWalletButton()}
       </div>
     </div>
   )
