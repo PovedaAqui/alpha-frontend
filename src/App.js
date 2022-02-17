@@ -58,7 +58,7 @@ function App() {
         console.log("Initialize payment");
         let nftTxn = await nftContract.safeMint;
         console.log("Minting... please wait");
-        await nftTxn.await; //needs to be checked
+        await nftTxn.wait();
         console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`); //needs to be checked
       } else {
         console.log("Ethereum object does not exist");
