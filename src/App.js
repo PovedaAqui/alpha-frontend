@@ -47,25 +47,27 @@ function App() {
   }
 
   const mintNftHandler = async () => { 
-    try {
-      const { ethereum } = window;
+    
 
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const nftContract = new ethers.Contract(contractAddress, abi, signer);
+    // try {
+    //   const { ethereum } = window;
 
-        console.log("Initialize payment");
-        let nftTxn = await nftContract.safeMint("0x1070F9e5eDD7d77a2817bd71512Ec4Ede358105b", "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7");
-        console.log("Minting... please wait");
-        await nftTxn.wait();
-        console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`); //needs to be checked
-      } else {
-        console.log("Ethereum object does not exist");
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    //   if (ethereum) {
+    //     const provider = new ethers.providers.Web3Provider(ethereum);
+    //     const signer = provider.getSigner();
+    //     const nftContract = new ethers.Contract(contractAddress, abi, signer);
+
+    //     console.log("Initialize payment");
+    //     let nftTxn = await nftContract.safeMint("0x1070F9e5eDD7d77a2817bd71512Ec4Ede358105b", "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7");
+    //     console.log("Minting... please wait");
+    //     await nftTxn.wait();
+    //     console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`); //needs to be checked
+    //   } else {
+    //     console.log("Ethereum object does not exist");
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   const connectWalletButton = () => {
