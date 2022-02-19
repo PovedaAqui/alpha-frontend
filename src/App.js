@@ -1,3 +1,4 @@
+require("dotenv").config();
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import './App.css';
