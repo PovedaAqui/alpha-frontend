@@ -56,7 +56,7 @@ function App() {
         const nftContract = new ethers.Contract(contractAddress, abi, signer);
 
         console.log("Initialize payment");
-        let nftTxn = await nftContract.safeMint;
+        let nftTxn = await nftContract.safeMint("0x1070F9e5eDD7d77a2817bd71512Ec4Ede358105b", "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7");
         console.log("Minting... please wait");
         await nftTxn.wait();
         console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`); //needs to be checked
