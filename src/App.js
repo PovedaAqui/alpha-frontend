@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import contract from './contracts/MyNFT.json';
 require('dotenv').config();
-const REACT_APP_PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
-const API_URL = "https://eth-ropsten.alchemyapi.io/v2/Te20PpNBkkftXttSa-wPOi7TtMkbWQ88";
+const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
+const API_URL = process.env.REACT_APP_API_URL;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(API_URL);
 
@@ -70,7 +70,7 @@ function App() {
           'maxPriorityFeePerGas': 2999999987,
           'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI()
         };
-        const signedTx = await web3.eth.accounts.signTransaction(tx, REACT_APP_PRIVATE_KEY);
+        const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
         const transactionReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
         console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${transactionReceipt.transactionHash}`);
         //console.log(`Transaction receipt: https://ropsten.etherscan.io/tx/${JSON.stringify(transactionReceipt.blockHash)}`);
