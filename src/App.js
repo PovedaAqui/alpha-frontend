@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-//import { ethers } from 'ethers';
 import './App.css';
 import contract from './contracts/MyNFT.json';
 require('dotenv').config();
