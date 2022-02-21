@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+//import { ethers } from 'ethers';
 import './App.css';
 import contract from './contracts/MyNFT.json';
-
 require('dotenv').config();
+const REACT_APP_PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
+const API_URL = "https://eth-ropsten.alchemyapi.io/v2/Te20PpNBkkftXttSa-wPOi7TtMkbWQ88";
+const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+const web3 = createAlchemyWeb3(API_URL);
 
 const contractAddress = "0xFB98EbdC2d9299C517631107DE7Bc2Ca72590e09";
 const abi = contract.abi;
+const nftContract = new web3.eth.Contract(abi, contractAddress);
 
 function App() {
 
@@ -21,7 +25,7 @@ function App() {
       console.log("Wallet exists! We're ready to go")
     }
 
-    const accounts = await ethereum.request({ method: 'eth_accounts'});
+    const accounts = await ethereum.request({ method: 'eth_accounts' });
 
     if (accounts.lenght !== 0) {
       const account = accounts[0];
@@ -49,20 +53,27 @@ function App() {
   }
 
   const mintNftHandler = async () => { 
-    
+
     try {
-      // const { ethereum } = window;
+      const { ethereum } = window;
 
-      // if (ethereum) {
-      //   const provider = new ethers.providers.Web3Provider(ethereum);
-      //   const signer = provider.getSigner();
-      //   const nftContract = new ethers.Contract(contractAddress, abi, signer);
+      if (ethereum) {
+        
+        const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
+        const tokenURI = "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7";
 
-      //   console.log("Initialize payment");
-      //   let nftTxn = await nftContract.safeMint("0x1070F9e5eDD7d77a2817bd71512Ec4Ede358105b", "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7");
-      //   console.log("Minting... please wait");
-      //   await nftTxn.wait();
-      //   console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`);
+        const tx = {
+          'from': currentAccount,
+          'to': contractAddress,
+          'nonce': nonce,
+          'gas': 500000,
+          'maxPriorityFeePerGas': 2999999987,
+          'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI()
+        };
+        const signedTx = await web3.eth.accounts.signTransaction(tx, REACT_APP_PRIVATE_KEY);
+        const transactionReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${transactionReceipt.transactionHash}`);
+        //console.log(`Transaction receipt: https://ropsten.etherscan.io/tx/${JSON.stringify(transactionReceipt.blockHash)}`);
       } else {
         console.log("Ethereum object does not exist");
       }
