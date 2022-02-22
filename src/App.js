@@ -70,14 +70,19 @@ function App() {
         };
 
         try {
-          const txHash = await window.ethereum.request({
-            method: "eth_sendTransaction",
-            params: [tx],
-          });
-          return {
-            success: true,
-            status: "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash
-          }
+          ethereum
+            .request({
+              method: "eth_sendTransaction",
+              params: [tx],
+            })
+            .then((result) => {
+              let nftTxn = await nftContract.safeMint;
+              console.log("Minting... please wait");
+              await nftTxn.wait();
+              console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`)
+            })
+            // .then((result) => console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`))
+            .catch((error) => console.log("error", error));
         } catch (error) {
           return {
             status: "😥 " + error.message,
