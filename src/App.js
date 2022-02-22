@@ -74,8 +74,10 @@ function App() {
             method: "eth_sendTransaction",
             params: [tx],
           });
-          const receipt = await txHash.wait();
-          console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${receipt.transactionHash}`);
+          const receiptTx = await txHash.wait();
+          const receipt = web3.eth.getTransactionReceipt(receiptTx.transactionHash)
+          .then(console.log);
+          //console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${receipt.transactionHash}`);
         } catch (error) {
           return {
             status: "😥 " + error.message,
