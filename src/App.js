@@ -17,7 +17,7 @@ function App() {
 
   const checkWalletIsConnected = async () => {
     const { ethereum } = window;
-    if (!ethereum) {
+    if (!ethereum) {      
       console.log("Make sure you have Metamask installed");
       return;
     } else {
@@ -58,21 +58,30 @@ function App() {
 
       if (ethereum) {
         
-        const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
+        //const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
         const tokenURI = "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7";
 
         const tx = {
           'from': currentAccount,
           'to': contractAddress,
-          'nonce': nonce,
-          'gas': 500000,
-          'maxPriorityFeePerGas': 2999999987,
+          //'nonce': nonce,
+          'gas': "500000",
+          // 'maxPriorityFeePerGas': "2999999987",
           'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI()
         };
-        const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
-        const transactionReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-        console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${transactionReceipt.transactionHash}`);
-        //console.log(`Transaction receipt: https://ropsten.etherscan.io/tx/${JSON.stringify(transactionReceipt.blockHash)}`);
+
+        try {
+          const txHash = await window.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [tx],
+          });
+          const receipt = await txHash.wait();
+          console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${receipt.transactionHash}`);
+        } catch (error) {
+          return {
+            status: "😥 " + error.message,
+          };
+        }
       } else {
         console.log("Ethereum object does not exist");
       }
