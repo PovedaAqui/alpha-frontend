@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import contract from './contracts/MyNFT.json';
 require('dotenv').config();
-const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
 const API_URL = process.env.REACT_APP_API_URL;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(API_URL);
