@@ -74,10 +74,10 @@ function App() {
             method: "eth_sendTransaction",
             params: [tx],
           });
-          const receiptTx = await txHash.wait();
-          const receipt = web3.eth.getTransactionReceipt(receiptTx.transactionHash)
-          .then(console.log);
-          //console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${receipt.transactionHash}`);
+          return {
+            success: true,
+            status: "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash
+          }
         } catch (error) {
           return {
             status: "😥 " + error.message,
