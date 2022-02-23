@@ -75,12 +75,16 @@ function App() {
               method: "eth_sendTransaction",
               params: [tx],
             })
-            .then((result) => {
+            .then(
+              
+              async (result) => 
+              {
               let nftTxn = await nftContract.safeMint;
               console.log("Minting... please wait");
-              await nftTxn.wait();
-              console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`)
-            })
+              web3.eth.getTransactionReceipt(result)
+              .then(console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`));
+              }
+            )
             // .then((result) => console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`))
             .catch((error) => console.log("error", error));
         } catch (error) {
@@ -95,6 +99,11 @@ function App() {
       console.log(err);
     }
   }
+
+  // const receiptTx = async (result) => {
+
+
+  // }
 
   const connectWalletButton = () => {
     return (
