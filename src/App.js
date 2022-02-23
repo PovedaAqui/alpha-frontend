@@ -100,11 +100,6 @@ function App() {
     }
   }
 
-  // const receiptTx = async (result) => {
-
-
-  // }
-
   const connectWalletButton = () => {
     return (
       <button onClick={connectWalletHandler} className='cta-button connect-wallet-button'>
