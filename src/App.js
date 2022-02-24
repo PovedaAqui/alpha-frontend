@@ -81,11 +81,13 @@ function App() {
               {
               let nftTxn = await nftContract.safeMint;
               console.log("Minting... please wait");
-              web3.eth.getTransactionReceipt(result)
-              .then(console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`));
-              }
-            )
-            // .then((result) => console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${result}`))
+              const transactionReceipt = await web3.eth.getTransactionReceipt(result);
+              await transactionReceipt.wait;
+              if (transactionReceipt!=null) {
+                console.log(`Mined... ${transactionReceipt}`);
+              } else { console.log(`error`) };
+              })
+
             .catch((error) => console.log("error", error));
         } catch (error) {
           return {
