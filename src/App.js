@@ -82,10 +82,10 @@ function App() {
               let nftTxn = await nftContract.safeMint;
               console.log("Minting... please wait");
               const transactionReceipt = await web3.eth.getTransactionReceipt(result);
-              await transactionReceipt.wait;
+              await transactionReceipt.wait; //cannot await because of null
               if (transactionReceipt!=null) {
                 console.log(`Mined... ${transactionReceipt}`);
-              } else { console.log(`error`) };
+              } else { console.log(`error`) }; //getting this
               })
 
             .catch((error) => console.log("error", error));
