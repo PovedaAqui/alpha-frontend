@@ -66,29 +66,28 @@ function App() {
           //'nonce': nonce,
           'gas': "500000",
           // 'maxPriorityFeePerGas': "2999999987",
-          'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI()
+          'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI(),
         };
 
         try {
-          ethereum
-            .request({
-              method: "eth_sendTransaction",
-              params: [tx],
-            })
-            .then(
-              
-              async (result) => 
-              {
-              let nftTxn = await nftContract.safeMint;
-              console.log("Minting... please wait");
-              const transactionReceipt = await web3.eth.getTransactionReceipt(result);
-              await transactionReceipt.wait; //cannot await because of null
-              if (transactionReceipt!=null) {
-                console.log(`Mined... ${transactionReceipt}`);
-              } else { console.log(`error`) }; //getting this
-              })
-
-            .catch((error) => console.log("error", error));
+          const result = await ethereum
+          .request({
+            method: "eth_sendTransaction",
+            params: [tx],
+          });
+          if (result!=null){
+            const interval = setInterval(()=>{
+              console.log("Attempting to get transaction receipt...");
+              web3.eth.getTransactionReceipt(result, function(err, rec){
+                if (rec) {
+                  console.log(`See transaciton in https://ropsten.etherscan.io/tx/${rec.transactionHash}`);
+                  clearInterval(interval);
+                } else {
+                  console.log(err);
+                }
+              });
+            }, 1000); 
+          }
         } catch (error) {
           return {
             status: "😥 " + error.message,
