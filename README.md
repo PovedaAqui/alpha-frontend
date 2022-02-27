@@ -1,1 +1,1 @@
-Bookverse is a NFT marketplace wanting to be an user first and decentralized version of Amazon Kindle.
+Bookverse is an NFT marketplace where users will be able to buy, collect, and resold digital books. We want to be a decentralized version of Amazon Kindle and help to onboard authors, publishers and lectors to web3.
