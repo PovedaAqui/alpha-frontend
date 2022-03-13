@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import contract from './contracts/MyNFT.json';
+import contract from './contracts/Bookverse.json';
 require('dotenv').config();
 const API_URL = process.env.REACT_APP_API_URL;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(API_URL);
 
-const contractAddress = "0xFB98EbdC2d9299C517631107DE7Bc2Ca72590e09";
+const contractAddress = "0x532647c3BF887015F6A0E06Df7f6708E48f67D61";
 const abi = contract.abi;
 const nftContract = new web3.eth.Contract(abi, contractAddress);
 
@@ -57,16 +57,16 @@ function App() {
 
       if (ethereum) {
         
-        //const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
-        const tokenURI = "https://gateway.pinata.cloud/ipfs/QmSo4XQhb3sATR6Ln6JPvBoFuFKQmGgiqwdoGShNx4wRe7";
+        const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
 
         const tx = {
           'from': currentAccount,
           'to': contractAddress,
-          //'nonce': nonce,
+          'nonce': nonce.toString(),
           'gas': "500000",
+          'value': web3.utils.toWei('0.002', 'ether'),
           // 'maxPriorityFeePerGas': "2999999987",
-          'data': nftContract.methods.safeMint(currentAccount, tokenURI).encodeABI(),
+          'data': nftContract.methods.mintNFTs(1).encodeABI(),
         };
 
         try {
