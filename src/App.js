@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import { useEffect, useState } from 'react';
 import './App.css';
 import contract from './contracts/Bookverse.json';
@@ -58,14 +59,16 @@ function App() {
       if (ethereum) {
         
         const nonce = await web3.eth.getTransactionCount(currentAccount, 'latest'); //get latest nonce
+        const value = web3.utils.toWei('0.002');
+        console.log(value);
 
         const tx = {
           'from': currentAccount,
           'to': contractAddress,
           'nonce': nonce.toString(),
           'gas': "500000",
-          'value': web3.utils.toWei('0.002', 'ether'),
-          // 'maxPriorityFeePerGas': "2999999987",
+          'value': value,
+          'maxPriorityFeePerGas': "2999999987",
           'data': nftContract.methods.mintNFTs(1).encodeABI(),
         };
 
